@@ -130,7 +130,7 @@ Let's see how Claude3.5 compares with Gemma2 over all challenges:
 ![Model performance compared](images/Gemma2Claude35_ARC_Performance_Chart.jpg)
 
 Full results can be found at:
-- [Link to results data](assets/ARC_Outcomes_Claude35.xlsx)
+- [ARC_Outcomes_Claude35.xlsx](assets/ARC_Outcomes_Claude35.xlsx)
 
 The above chart shows that both Claude3.5 and Gemma2's performance begins to collapse with challenges over 300 elements (17x17) and is nil by 400 elements (20x20). Remember as sequence models, these LLM's are consuming the matrices flattened into a single array, reading the elements row by row from left to right and top to bottom. Relationships between rows become more difficult to remember as the number of columns increases and the number of rows between related entities also increases.
 
@@ -141,7 +141,9 @@ However, there is a substantial range of outcomes for much smaller problems, eve
 There is no official classification of ARC challenges, so 100 challenges were manually completed and classified. Each challenge may have more than one classification, up to three.
 Broadly speaking, 'colour/value substitutions' are the simplest, quickly followed by 'grid expansion and repetition' (tiling with or without reflection/rotation) and mathematical operations, (max pooling or similar), which are amenable to LLMs and their consumption of matrices as flattend streams of tokens.
 
-On the other hand, some challenges demand the LLM identify an entity, a shape, and then deduce a mapping rule based on how that shape is connected to another shape (coordinate based transformations) in 2 dimensions. This 2D challenge is understandably awkward for anyone, or any LLM, reviewing matrices as flattened streams of tokens. The below results support these common sense understandings:
+On the other hand, some challenges demand the LLM identify an entity, a shape, and then deduce a mapping rule based on how that shape is connected to another shape (coordinate based transformations) in 2 dimensions. This 2D challenge is understandably awkward for anyone, or any LLM, reviewing matrices as flattened streams of tokens. The below results support these common sense understandings. 
+
+Note, 'Propn' indicates the proportion of challenges of the given classification which were successfully completed by the model.
 
 **Claude3.5**
 
@@ -179,7 +181,7 @@ Data for classification is available at:
 
 ### Impact of a Larger Model with Self Reflection
 
-All challenges have been attempted zero shot, whereas models such as Claude3.5 are optimised for chat, iterative conversation. 
+Thus far all challenges have been attempted zero shot, whereas models such as Claude3.5 are optimised for chat, iterative conversation. 
 
 That conversation can be with themselves in an 'agentic' workflow. The model  converses with itself to review data, plan an approach and reflect upon it's own responses. This has been demonstrated to give improved results in many use cases. This is not surprising as it is effectively prompting itself with multiple attempts to answer the question, opportunities to revise errors and make new insights. For our purposes we simply wish to know whether it can deliver better performance on ARC challenges.
 
@@ -199,9 +201,9 @@ This approach was attempted on 80 randomly sampled challenges from the populatio
 
 A third approach is to use the above discussed agent in a Jupyter notebook, but further enable that agent to write and execute code in order to solve the challenges. The hope is that code allows the agent to access a symbolic reasoning tool, a too which can scale up and allow the model to reach beyond its own memory limits, as it does for us.
 
-In fact, the [ARC leaderboard](https://arcprize.org/leaderboard) on the public* evaluation set is currently (Sep 2024) led by a coding agent developed by [Ryan Greenblatt](https://substack.com/@ryangreenblatt/p-145731248), albeit one which iterates up to 8,000 times to develop code for the solution to each challenge.
+In fact, the [ARC leaderboard](https://arcprize.org/leaderboard) on the evaluation set is currently (as of Sep 2024) led by a coding agent developed by [Ryan Greenblatt](https://substack.com/@ryangreenblatt/p-145731248), albeit one which iterates up to 8,000 times to develop code for the solution to each challenge.
 
-Our agent is limited to 15 iterations to save costs. Each iteration requires sending the entire Jupyter notebook as the context, so is expensive. More complex strategies are required as the context window is approached.
+Our agent is limited to 15 iterations to save costs. Each iteration requires sending the entire Jupyter notebook as the context, so is expensive. More complex strategies are required as the context window limit is approached.
 
 The code for creating this environment can be found at:
 - [Agentic_Notebook_WithCode_Claude35.ipynb](assets/Agentic_Notebook_WithCode_Claude35.ipynb)
@@ -209,7 +211,9 @@ The code for creating this environment can be found at:
 An example notebook written by the coding agent can be found at:
 - [Agentic_Notebook_WithCode_Claude35_Example.ipynb](assets/Agentic_Notebook_WithCode_Claude35_Example.ipynb)
 
-Despite the 15 iteration limit, this agent scores better than the 1shot prompt, see full comparison in following section. Also, there is one challenge which coding successfully solves that other approaches cannot, 363442ee, a reasonably complex test:
+Despite the 15 iteration limit, this agent scores better than the 1shot prompt, see full comparison in following section. 
+
+Also, there is one challenge which coding successfully solves that other approaches cannot, 363442ee, a reasonably complex test:
 
 ![Challenge 3634422ee](images/ARC_example3.jpg)
 
@@ -234,7 +238,7 @@ Successfully complete ARC challenges over the random sample of 80 were:
 - Coding Agent     : 34
 - Estimate Agent   : 36
 
-Agentic workflows clearly deliver additional successes. However, the challenges which each approach completes are not the same. Over the sample, the unique number of challenges which Claude3.5 can complete using either agentic approach rises from 29 to 43.
+Agentic workflows clearly deliver additional successes. However, the challenges which each approach completes are not the same. Over the sample, the unique number of challenges which Claude3.5 can complete using at least one of these approaches rises from 29 to 43.
 
 To compare these approaches, we must properly account for the sample size and the changes in challenges which are achieved. For contingency tables of binary outcomes, we use:
 
@@ -254,7 +258,8 @@ Results as follows, where 0 represents a failed prediction and 1 is a successful
 
 - McNemar's statistic: 1.8947 (Highest, most evidence of difference)
 - Contingency Table:
-|                     | Estimate_1shot: 0 | Estimate_1shot: 1 |
+
+| Agent Type          | Estimate_1shot: 0 | Estimate_1shot: 1 |
 |---------------------|-------------------|-------------------|
 | Estimate_Agent: 0   |        38         |         6         |
 | Estimate_Agent: 1   |        13         |        23         |
@@ -266,7 +271,8 @@ The effect size is large and may be practically significant.
 
 - McNemar's statistic: 0.9412
 - Contingency Table:
-|                     | Coding_Agent: 0 | Coding_Agent: 1 |
+
+| Agent Type          | Coding_Agent: 0 | Coding_Agent: 1 |
 |---------------------|-----------------|-----------------|
 | Estimate_1shot: 0   |       40        |       11        |
 | Estimate_1shot: 1   |        6        |       23        |
@@ -278,7 +284,8 @@ The effect size is relatively small.
 
 - McNemar's statistic: 0.1250 (Lowest, least evidence of difference)
 - Contingency Table:
-|                     | Coding_Agent: 0 | Coding_Agent: 1 |
+
+| Agent Type          | Coding_Agent: 0 | Coding_Agent: 1 |
 |---------------------|-----------------|-----------------|
 | Estimate_Agent: 0   |       41        |        3        |
 | Estimate_Agent: 1   |        5        |       31        |
@@ -303,7 +310,7 @@ We can investigate the features which are activated within Gemma2-9B-IT as it pr
 The analysis will be most tractable when :
 
 1. ARC challenges are small (few tokens / small matrices), within 1024 tokens total (SAE limit) but exemplify large differences in output
-    - Hence we handpick 10 small ARC challenges for successes and failures
+    - Hence we hand pick 6 small ARC challenges for successes and failures. Listed later.
 
 2. The analysis focusses on the first token of the response, the token following the prompt. 
     - It is simplest to compare activations for a single token, not average over the many and various tokens in a full ARC answer.
@@ -424,22 +431,22 @@ This is analysis is conducted in the below notebook:
 
 The 'contrasting pairs trick', whereby we seek the differences in feature activations between two prompts, was executed on the following pairs of small challenges: 
 successful vs unsuccessful, for all three layers (9, 20, 31).
-<br>
+
 1. Dead Cert vs Near Miss
 2. Lucky Strike vs Known Loser
 3. Dead Cert 1 vs Lucky Strike
 4. Dead Cert 1 vs Known Loser
 5. Near Miss vs Lucky Strike
-<br>
+
 | NickName      | Challenge  | Confidence | Target                                     | Outcome |
 |:--------------|:-----------|:-----------|:-------------------------------------------|:--------|
 | Dead Cert 1   | e9afcf9a   | 5          | [[6, 2, 6, 2, 6, 2], [2, 6, 2, 6, 2, 6]]   | Correct |
-| Near Miss     | c9e6f938   | 5          | [[7, 7, 0, 0, 7, 7], [0, 7, 0, 0, 7, 0],.. | False   |
+| Near Miss     | c9e6f938   | 5          | [[7, 7, 0, 0, 7, 7], [0, 7, 0, 0, 7, 0],..]| False   |
 | Lucky Strike  | d037b0a7   | 3          | [[4, 0, 8], [4, 0, 8], [4, 7, 8]]          | Correct |
 | Known Loser 1 | 6150a2bd   | 4          | [[0, 0, 4], [0, 8, 6], [5, 3, 6]]          | False   |
-| Dead Cert 2   | 6fa7a44f   | 5          | [[2, 9, 2], [8, 5, 2], [2, 2, 8], [2, 2... | Correct |
+| Dead Cert 2   | 6fa7a44f   | 5          | [[2, 9, 2], [8, 5, 2], [2, 2, 8], [2, 2..]]| Correct |
 | Known Loser 2 | 48d8fb45   | 4          | [[0, 3, 0], [3, 3, 0], [0, 3, 3]]          | False   |
-<br>
+
 Within each layer, the most differentiated features remained similar across all pairs. On layer 20 this appears as follows for the first and second pair:
 
 **1. Dead Cert vs Near Miss**
@@ -447,10 +454,10 @@ Within each layer, the most differentiated features remained similar across all 
 
 **2. Lucky Strike vs Known Loser**
 ![Contrast Pairs 2](images/ContrastPairs_02.jpg)
-<br>
+
 Charts for the other pairs can be viewed in the notebook, the most differentiated activations remain the same. 
 The above differences in activated features on layer **20** can be decoded via Neuronpedia:
-<br>
+
 - 03655: References to data structures and conditional checks in programming
 - 01600: References to music albums and bands
 - 11000: Possessive pronouns and their corresponding nouns
@@ -461,9 +468,9 @@ The above differences in activated features on layer **20** can be decoded via N
 - 09827: Specific names and terms related to individuals, organizations, or places within various contexts
 - 02495: Step-by-step instructional phrases indicating processes or actions
 - 00700: Phrases related to planning and organization
-<br>
+
 For comparison, differences in activated features in layer **9** were largest for:
-<br>
+
 - 10531: references to programming and software configuration elements
 - 08383: sections and headings within a document
 - 09031: specific terminology and jargon related to programming, mathematics, and scientific concepts
@@ -471,27 +478,27 @@ For comparison, differences in activated features in layer **9** were largest fo
 - 02187: references to generated code or automated processes
 - 08343: terms related to pharmacological studies and drug interactions
 - 03684: instances of brackets and related information
-<br>
+
 Differences in activated features in layer **31** were largest for:
-<br>
+
 - 15165: sequences of whitespace or spaces in text
 - 09064: occurrences of the bracket character
 - 14837: references to objects and concepts indicating age or obsolescence
 - 14071: code-related syntax elements, particularly function calls and closure terminators
 - 00086: references to ethical approval and institutional guidelines
 - 07128: phrases indicating links to additional resources or data
-<br>
+
 It was feared that features on layer 9 are oriented to decoding the text of the problem, not working through the problem itself. Similarly for layer 31, it appeared as if the features are oriented towards encoding the response into text, after the problem has been processed. Whereas, layer 20's features appear more broadly related to the processing of matrix transformations.
-<br>
+
 This is purely a judgement on our behalf, it bears further analysis. Limited time permitted steering analysis to be conducted on only one layer's features. Layer 20 was chosen.
 
 ## Steering the Model
 
 We are now in a position to steer the model by suppressing and amplifying the features which are most differentiated across the challenges. On layer 20 this is repeatedly:
 
-- 03655. References to data structures and conditional checks in programming
-- 01600. References to music albums and bands
-- 11000. Possessive pronouns and their corresponding nouns
+- 03655: References to data structures and conditional checks in programming
+- 01600: References to music albums and bands
+- 11000: Possessive pronouns and their corresponding nouns
 
 3655 is clearly related to our task, whereas 1600 and 11000 are more surprising. Since the Neuronpedia descriptions of these features would not be based on matrices but on text, we should remain open to 1600 and 11000 having roles in matrix transformations. 
 
@@ -507,22 +514,23 @@ Many more combinations of features and challenges are yet to be explored.
 
 There are occassionally geometric relationships between related features when reduced to two dimensions. This approach is most effective when studying features with related but distinct meanings, such as days of the week, which is the cananonical example, [Engels et al, 2024](https://arxiv.org/abs/2405.14860). See below:
 
-![PCA_DaysOfWeek](images/PCA_DaysOfWeek.png width=700 height=500)
+![PCA_DaysOfWeek](images/PCA_DaysOfWeek.png)
 
 For comparison, when we project activiations for random features down to two dimensions, then we see this:
 
-![PCA_RandomFeatures](images/PCA_RandomFeatures.jpg width=700 height=500)
+![PCA_RandomFeatures](images/PCA_RandomFeatures.jpg)
 
 If features related to the differences between successful and unsuccessful challenges displayed any geometrical pattern then we would have an indication of relationships to be further explored, perhaps relating to matrix transformations. This would be somewhat 'meta', matrix transformations as represented in a deep learning model which functions via matrix transformations.
 
-![PCA_DifferentialFeatures](images/PCA_DifferentialFeatures.png width=700 height=500)
+![PCA_DifferentialFeatures](images/PCA_DifferentialFeatures.png)
 
 This is not as striking as the days of week example above. Nevertheless, the clusters of colors which are visible do relate to matrices:
-Red: [@
-Green: [*
-Light Green: 'Box'
-Dark Green: -----
-Yellow: Spaces
+
+- Red: [@
+- Green: [*
+- Light Green: 'Box'
+- Dark Green: -----
+- Yellow: Spaces
 
 ## Conclusion
 

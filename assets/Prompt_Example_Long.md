@@ -53,6 +53,10 @@ THEN Present your predicted output in np.array format
 
 ## 3. THE DATA
 
+================================================================
+END OF PROMPT
+EXAMPLE DATA:
+
 TRAIN Pair 0
 INPUT. Shape=(6, 3)
 array([[0, 1, 0],

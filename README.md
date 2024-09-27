@@ -83,12 +83,16 @@ RESULT:
 
 ### Impact of More Descriptive Prompt
 
-We also use a longer and more descriptive prompt (2693 characters), link to example below. This describes the various types of transforms which the model my encounter when resolving ARC challenges. As before; 5 attempts, temp=0.0, top_p = 0.7
+We also use a longer and more descriptive prompt (2693 characters), link to example below. 
+
+- [Prompt_Example_Long.md](assets/Prompt_Example_Long.md)
+
+This describes the various types of transforms which the model my encounter when resolving ARC challenges. As before, the model has 5 attempts at temp=0.0, top_p = 0.7.
 
 RESULT:
 24 Correct from 403 total (6%)
 
-Prompt has no overall effect. But, there is a change in the challenges which are successful vs failing. Five challenges flip from success to failure as we change the prompt, but another five flip from failure to success. By claiming successes from both prompts we successfully achieve 5 more challenges with Gemma2, so the score now rises to:
+The change in prompt has no overall effect. But, there is a change in the challenges which are successful vs failing. Five challenges flip from success to failure as we change the prompt, but another five flip from failure to success. By claiming successes from both prompts we complete 5 more challenges with Gemma2, so the score now rises to:
 
 ADJUSTED RESULT:
 29 Correct from 403 total (7%)

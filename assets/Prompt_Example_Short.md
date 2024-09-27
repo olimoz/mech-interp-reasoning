@@ -16,6 +16,11 @@ FIRST score your confidence that you understand the mapping pattern, 0-5 where 0
 This score must be the FIRST output you give, no preamble, no prefix, no punctuation, just a single digit score.
 THEN Present your predicted output in np.array format
 
+
+================================================================
+END OF PROMPT
+EXAMPLE DATA:
+
 TRAIN Pair 0
 INPUT. Shape=(6, 3)
 array([[0, 1, 0],

@@ -197,7 +197,7 @@ The code for creating this environment can be found at:
 - [Agentic_Notebook_Claude35.ipynb](assets/Agentic_Notebook_Claude35.ipynb)
 
 An example conversation, i.e. notebook, outputted by this process can be found at:
-- [Agentic_Notebook_Claude35_Example.ipynb](assets/Agentic_Notebook_WithCode_Claude35_Example.ipynb)
+- [Agentic_Notebook_Claude35_Example.ipynb](assets/Agentic_Notebook_Claude35_Example.ipynb)
 
 This approach was attempted on 80 randomly sampled challenges from the population of 403 (approx 20%). This sample size was due to cost constraints as agentic workflows consume large numbers of tokens and Claude3.5 is an expensive model.
 

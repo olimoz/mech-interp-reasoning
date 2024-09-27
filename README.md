@@ -512,21 +512,22 @@ Many more combinations of features and challenges are yet to be explored.
 
 ## Co-Occurrence Networks
 
-There are occassionally geometric relationships between related features when reduced to two dimensions. This approach is most effective when studying features with related but distinct meanings, such as days of the week, which is the cananonical example, [Engels et al, 2024](https://arxiv.org/abs/2405.14860). See below:
+There are occassionally geometric relationships between related features when reduced to two dimensions. This approach is most effective when studying features with related but distinct meanings, such as days of the week, which is the cananonical example, [Engels et al, 2024](https://arxiv.org/abs/2405.14860). See their chart below:
 
 ![PCA_DaysOfWeek](images/PCA_DaysOfWeek.png)
 
-For comparison, when we project activiations for random features down to two dimensions, then we see this:
+For comparison, when we project activiations for **completely random features** down to two dimensions, then we see this:
 
 ![PCA_RandomFeatures](images/PCA_RandomFeatures.jpg)
 
-If features related to the differences between successful and unsuccessful challenges displayed any geometrical pattern then we would have an indication of relationships to be further explored, perhaps relating to matrix transformations. This would be somewhat 'meta', matrix transformations as represented in a deep learning model which functions via matrix transformations.
+Now, let's derive a plot for the features which differentiate the successful and unsuccessful challenges. These are much the same as the maximally activated features for a successful challenge:
 
 ![PCA_DifferentialFeatures](images/PCA_DifferentialFeatures.png)
 
+If these displayed any geometrical pattern then we would have an indication of relationships to be further explored, perhaps relating to matrix transformations. This would be somewhat 'meta', matrix transformations as represented in a deep learning model which functions via matrix transformations.
 This is not as striking as the days of week example above. Nevertheless, the clusters of colors which are visible do relate to matrices:
 
-- Red: [@
+- Red (See rollover note on chart): [@
 - Green: [*
 - Light Green: 'Box'
 - Dark Green: -----

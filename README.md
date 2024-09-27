@@ -2,29 +2,38 @@
 
 ## Abstract
 
-This study investigates the boundary between effective and ineffective reasoning in Large Language Models (LLMs) using the Abstraction and Reasoning Corpus (ARC) challenges.
+Google Deepmind have identifed self-reasoning as one of the four core 'dangerous capabilities' for which they are building evaluations, not least for ai agents. This study investigates the boundary between effective and ineffective reasoning in Large Language Models (LLMs) using the Abstraction and Reasoning Corpus (ARC) challenges.
 
-The research employs a dual approach: evaluating various LLM based strategies on the ARC training set to better resolve this boundary, then applying mechanistic interpretability techniques to explore and manipulate model behaviour.
+This research employs a dual approach: evaluating various LLM based strategies on the ARC training set to better resolve this boundary, then applying mechanistic interpretability techniques to explore and manipulate model behaviour.
 
-Starting with Google's Gemma2-9B-IT, the study explores improvements through enhanced prompting, larger models (Anthropic's Claude 3.5) and agentic self reflection. 
+Starting with Google's Gemma2-9B-IT, the study explores improvements in reasoning outcomes through enhanced prompting, larger models (Anthropic's Claude 3.5) and ai agents, via agentic self reflection.
 
 Key findings include the type of challenges which both small and large LLM's struggle with, and how performance collapses on matrices of over 300 elements, regardless LLM size, perhaps a limitation of the LLM architecture.
 
-Using sparse autoencoders to investigate Gemma2-9B-IT's internal workings, the research successfully steers the model towards more accurate predictions on certain ARC challenges. This highlights promising directions for uncovering circuits and features related to reasoning abilities in small models.
+Using sparse autoencoders to investigate Gemma2-9B-IT's internal workings, the research successfully steers the model towards more accurate predictions on certain ARC challenges. This presents a direction for developing tools to inspect, disrupt or guardrail reasoning abilities. It highlights promising directions for uncovering circuits and features related to reasoning abilities in small models.
 
-## Introduction
+## Introduction & Relation to AI Safety
 
 What does reasoning look like from the inside of a small LLM?
 
-[Andrej Karpathy](https://youtu.be/hM_h0UA7upI?si=BJY15gQ8oiIM_sNx&t=1623) has suggested that AI models can be reduced to a 'cognitive core' via distillation, perhaps less than 1 billion parameters. This would be a reasoning core with the ability to look up the facts and data required to approach a problem. Such small models could be hosted on almost any device, they would have obvious concerns for safety. Yet, as smaller models, we have hope of better understanding their mechanics, the role of each feature within the network. 
+[Andrej Karpathy](https://youtu.be/hM_h0UA7upI?si=BJY15gQ8oiIM_sNx&t=1623) has suggested that AI models can be reduced to a 'cognitive core' via distillation, perhaps less than 1 billion parameters. This would be a reasoning core with the ability to look up the facts and data required to approach a problem. Such small models could be hosted on almost any device, they would have obvious concerns for AI safety. Yet, as smaller models, we have hope of better understanding their mechanics, the role of each feature within the network. 
 
-In May 2024 Anthropic [published](https://www.anthropic.com/news/mapping-mind-language-model) their investigations into 'mapping the mind' of Claude Sonnet 3. Memorably, they demonstrated how amplifying features which respond to the 'Golden Gate Bridge' caused the model to believe that it was the bridge! They also report discovering more abstract features which activate for compute code bugs, break ups and conversations about secrets. This has obvious applications for AI safety.
+In May 2024 Anthropic [published](https://www.anthropic.com/news/mapping-mind-language-model) their investigations into 'mapping the mind' of Claude Sonnet 3. Memorably, they demonstrated how amplifying features which respond to the 'Golden Gate Bridge' caused the model to believe that it was the bridge! They also report discovering more abstract features which activate for compute code bugs, break ups and conversations about secrets. 
 
-This pursuit revels in the name 'mechanistic interpretability' and in the past month Google made it accessible for individual researchers. In August 2024 they published [Gemma-Scope](https://huggingface.co/google/gemma-scope), "a microscope of sorts that can help us break down a model’s internal activations into the underlying concepts" for their small Gemma2-2B and Gemma2-9B models. In March 2024 ex Apple engineer Johnny Lin launched [Neuronpedia](https://www.neuronpedia.org/), an encyclopaedia of discoveries in this field, what each model feature responds to. The Gemma2 models are well represented in Neuronpedia.
+This has obvious applications for AI safety, Anthropic's paper states "it might be possible to use the techniques described here to monitor AI systems for certain dangerous behaviors (such as deceiving the user), to steer them towards desirable outcomes (debiasing), or to remove certain dangerous subject matter entirely. We might also be able to enhance other safety techniques, such as Constitutional AI. 
+
+Meanwhile, Google Deepmind is working on 'Evaluating Frontier Models for Dangerous Capabilities' [Phuong et al, 2024](https://arxiv.org/pdf/2403.13793). Evaluations cover four areas:
+1. Persuasion and deception
+2. Cyber-security
+3. Self-proliferation
+4. **Self-reasoning**
+    -  "the agent’s ability to reason about and modify the environment (including its own implementation) when doing so is instrumentally useful; the ability to self-modify without making irrecoverable mistakes."
+
+In August 2024 Google Deepmind published [Gemma-Scope](https://huggingface.co/google/gemma-scope), "a microscope of sorts that can help us break down a model’s internal activations into the underlying concepts" for their small Gemma2-2B and Gemma2-9B models. This pursuit revels in the name 'mechanistic interpretability' and thanks to Gemma Scope it has become accessible for individual researchers. Furthermore, in March 2024 ex Apple engineer Johnny Lin launched [Neuronpedia](https://www.neuronpedia.org/), an encyclopaedia of discoveries in this field, what each model feature responds to. The Gemma2 models are well represented in Neuronpedia.
 
 Also this year, the [ARC prize](https://arcprize.org/) for AI reasoning has come to prominence with a $1m reward for the first AI to match human performance. The challenge is designed to focus on abstract reasoning. It resembles IQ puzzles, patterns in matrices of integers, not words. This work explores whether these puzzles assist in isolating Large Language Model (LLM) features which serve logical and pattern matching processes, not declarative concepts such as 'Golden Gate Bridge'.
 
-**The time is right for mechanistic interpretability research into reasoning.**
+**The time is right for mechanistic interpretability research into reasoning, motivated by concerns for ai-agents to self reason.**
 
 # PART 1: Applying LLM's to the ARC Prize
 
@@ -32,7 +41,7 @@ LLM's have become effective at intuition, summarised by [Daniel Kahnemann](https
 
 The failure of LLM's to reason symbolically has become so crucial that addressing this problem is the 'reasoning' behind OpenAI's latest 'o1' family of models. Trained on 'Chain of thought', the approach is to internalise the self reflection which we all use to monitor our progress working through a problem, to then select the next logical step of the solution. Google's Deepmind has declared it is taking a comparable approach inspired by merging AlphaGo reinforcement learning with their Gemini LLM. Meanwhile, Prof Fei Fei Li of Stanford University has launched a startup to develop ['spatial reasoning'](https://youtu.be/vIXfYFB7aBI?si=yexKfruk0c-S59xg&t=1595), an attempt to use 2D learning to tackle the problems which 1D (next token prediction) language models, such as o1, cannot complete.
 
-Francois Chollet, who developed Keras for deep learning, now part of Google's Tensorflow, has proposed the ARC-AGI challenges as tests to highlight the difference between these modes of thought. He describes intelligence as 'what we do when we don't know what to do'. LLM's including OpenAI's latest o1-preview, score poorly on the tests, but give sufficient correct responses that we can use them to explore the boundary between LLM's correctly reasoned responses and their errors. 
+Francois Chollet, who developed Keras for deep learning, now part of Google's Tensorflow, has proposed the ARC-AGI challenges as tests to highlight the difference between these modes of thought. He describes intelligence as 'what we do when we don't know what to do'. LLM's still score poorly on the tests, but give sufficient correct responses that we can use them to explore the boundary between LLM's correctly reasoned responses and their errors. 
 
 Let's view some examples of the puzzles which test this ability:
 
@@ -124,7 +133,11 @@ The notebook used to create this analysis, and others in this document, can be f
 
 ### Impact of a Larger Model
 
-ARC prize maintain their own [leaderboard](https://arcprize.org/leaderboard). Of the frontier LLM's, Claude 3.5 and OpenAI's o1-preview score highest, equal on the public evaluation set at 21% (September 2024). Note, this means o1-preview's unique reasoning abilities present no measurable advantage over the more traditional Claude 3.5 LLM for this data set. o1-preview is not currently available to the author for API usage. Therefore, we focus on Claude 3.5. To make a fair comparison with Gemma-2-9B-it, we need to know the similarity scores for Claude 3.5's predicted outputs vs the targets on the training set (not evaluation). The model was run via the Anthropic API on all 403 challenges temp=0.0 with a long prompt.
+ARC prize maintain their own [leaderboard](https://arcprize.org/leaderboard). Of the frontier LLM's, Claude 3.5 and OpenAI's o1-preview score highest, equal on the public evaluation set at 21% (September 2024). 
+
+**Note, this means o1-preview's unique reasoning abilities present no measurable advantage over the more traditional Claude 3.5 LLM for this data set.**
+
+o1-preview is not currently available to the author for API usage. Therefore, we focus on Claude 3.5. To make a fair comparison with Gemma-2-9B-it, we need to know the similarity scores for Claude 3.5's predicted outputs vs the targets on the training set (not evaluation). The model was run via the Anthropic API on all 403 challenges temp=0.0 with a long prompt.
 
 RESULT:
 131 Correct from 403 total (32%)
@@ -183,11 +196,11 @@ Importantly, Claude3.5 appears to be an extension of Gemma2's performance, both 
 Data for classification is available at:
 - [Challenge_Classification.xlsx](assets/ARC_Classifications.xlsx)
 
-### Impact of a Larger Model with Self Reflection
+### Impact of a Larger Model with Self Reflection: AI Agents
 
-Thus far all challenges have been attempted zero shot, whereas models such as Claude3.5 are optimised for chat, iterative conversation. 
+Thus far all challenges have been attempted zero shot, whereas models such as Claude3.5 are optimised for chat, iterative conversation. That conversation can be with themselves in an 'agentic' workflow. The model converses with itself to review data, plan an approach and reflect upon it's own responses. The better its reasoning abilities the more effective the agent.
 
-That conversation can be with themselves in an 'agentic' workflow. The model  converses with itself to review data, plan an approach and reflect upon it's own responses. This has been demonstrated to give improved results in many use cases. This is not surprising as it is effectively prompting itself with multiple attempts to answer the question, opportunities to revise errors and make new insights. For our purposes we simply wish to know whether it can deliver better performance on ARC challenges.
+This approach has been demonstrated to give improved results in many use cases. This is not surprising as it is effectively prompting itself with multiple attempts to answer the question, opportunities to revise errors and make new insights. We wish to know to what extent an agentic approach can deliver better performance on ARC challenges.
 
 Microsoft Research's Autogen was used to enable Claude 3.5 to use a Jupyter notebook as a mechanism for exploring the data and engaging in self reflection. The notebook, including code, comments and execution responses, is the conversation. It is an expanding context for each of the subsequent calls to the LLM. This is powerful because as the solution develops the notebook records an 'inner monologue', a 'chain of thought'. Whereas pure code is a finished product without clues to how it was derived.
 
@@ -201,7 +214,7 @@ An example conversation, i.e. notebook, outputted by this process can be found a
 
 This approach was attempted on 80 randomly sampled challenges from the population of 403 (approx 20%). This sample size was due to cost constraints as agentic workflows consume large numbers of tokens and Claude3.5 is an expensive model.
 
-### Impact of a Larger Model with Self Reflection & Coding Ability
+### Impact of a Larger Model with Self Reflection: AI Agents with Coding Ability
 
 A third approach is to use the above discussed agent in a Jupyter notebook, but further enable that agent to write and execute code in order to solve the challenges. The hope is that code allows the agent to access a symbolic reasoning tool, a too which can scale up and allow the model to reach beyond its own memory limits, as it does for us.
 
@@ -541,6 +554,8 @@ This is not as striking as the days of week example above. Nevertheless, the clu
 
 It is striking how models such as o1-preview can compete in doctoral level maths but make no great advancement on the ARC challenges. Furthermore, prompting and agentic approaches have notable impact, but are relatively small advancements to achieving human levels scores. It is apparent why Fei Fei Li believes next token prediction is not a complete architecture for reasoning, we may need an architecture designed for 2D inputs. 
 
-Despite the limits of LLM's on ARC challenges, it is equally striking that using these problems and the contrasting pairs trick, we can quickly identify the nodes to steer, to shift a failed prediction into an accurate one. This implies there is more to be uncovered, only two of the features were used for steering. The patterns these deep learning models use to represent and transform matrices remain to be uncovered.
+We appear to have some time to build defences against models and AI agents with far better reasoning abilities. It is therefore heartening that using the ARC challenges and the contrasting pairs trick, we can quickly identify the nodes to steer, to shift a failed prediction into an accurate one. Or vice versa, if we ever needed to! 
 
-Finding patterns in the features has proven less fruitful. We may have an incomplete subset of the relevant features, or Gemma is simply insufficiently trained on matrix operations to have a geometric representation of them. 
+This implies there is more to be uncovered, only two of the features were used for steering. The patterns these deep learning models use to represent and transform matrices remain to be uncovered.
+
+Unfortunately, finding patterns in the features has proven less fruitful. We may have an incomplete subset of the relevant features, or Gemma is simply insufficiently trained on matrix operations to have a geometric representation of them. 

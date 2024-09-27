@@ -510,7 +510,7 @@ The amplitude of these activations was then steered by the following values for 
 
 In one instance, highlighted in green, suppressing feature 3655 causes a failed prediction to become a correct one. In three other instances, highlighted in red, suppression of features improves accuracy (increases the similarity with target).
 
-![Steering Results](images/SteeringOutcomes.jpg width=1152 height=800)
+![Steering Results](images/SteeringOutcomes.jpg)
 
 Many more combinations of features and challenges are yet to be explored.
 
